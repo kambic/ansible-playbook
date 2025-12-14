@@ -1,26 +1,39 @@
-- name: Cloning dotfiles repo
-  ansible.builtin.git:
-    repo: 'https://github.com/sadikeey/dotfiles.git'
-    separate_git_dir: "{{ lookup('env', 'HOME') }}/.dotfiles.git"
-    dest: "/tmp/tmpdotfiles"
-    recursive: yes
-    update: yes
-    accept_hostkey: yes
-    version: main
-  tags:
-    - dotfiles
+---
+- name: Install and manage dotfiles with Dotbot
+  hosts: localhost
+  connection: local
+  become: false  # No sudo needed for home dir
+  vars:
+    dotfiles_repo: "git@github.com:kambic/hyprdots.git"
+    dotfiles_dest: "{{ ansible_env.HOME }}/dotfiles"  # Or ~/.dotfiles if preferred
+    dotbot_config: "install.conf.yaml"  # Your config file name
+    dotbot_bin: "{{ dotfiles_dest }}/dotbot/bin/dotbot"  # Adjust if submodule path differs
 
-- name: Syncing dotfiles.
-  synchronize:
-    src: "/tmp/tmpdotfiles/"
-    dest: "{{ lookup('env', 'HOME') }}/"
-    recursive: true
-    rsync_opts:
-      - "--exclude=.git"
-  tags:
-    - dotfiles
+  tasks:
+    - name: Clone dotfiles repo (with submodules)
+      ansible.builtin.git:
+        repo: "{{ dotfiles_repo }}"
+        dest: "{{ dotfiles_dest }}"
+        recursive: yes
+        update: yes
+        version: cleanup  # Or your branch
+      register: dotfiles_clone
 
-- name: Hide untracked dotfiles.
-  shell: /usr/bin/git --git-dir=$HOME/.dotfiles.git/ --work-tree=$HOME config --local status.showUntrackedFiles no
-  tags:
-    - dotfiles
+    - name: Update Dotbot and other submodules
+      ansible.builtin.command:
+        cmd: git submodule update --init --recursive
+        chdir: "{{ dotfiles_dest }}"
+      when: dotfiles_clone.changed
+
+    - name: Run Dotbot to install/symlink dotfiles
+      ansible.builtin.command:
+        cmd: "{{ dotfiles_dest }}/install -c {{ dotbot_config }}"  # Assumes your repo has an 'install' script
+        chdir: "{{ dotfiles_dest }}"
+      # Or direct if no install script:
+      # cmd: "{{ dotbot_bin }} -d {{ dotfiles_dest }} -c {{ dotbot_config }}"
+
+    # Optional: Hide untracked files in repo (if you still want bare-repo-like behavior)
+    # - name: Hide untracked dotfiles in home (bare repo style)
+    #   ansible.builtin.command:
+    #     cmd: git --git-dir={{ ansible_env.HOME }}/.dotfiles.git --work-tree={{ ansible_env.HOME }} config --local status.showUntrackedFiles no
+    #   when: false  # Disable if fully switching to Dotbot symlinks

@@ -5,11 +5,7 @@
     - zsh
     - install
 
-- name: Change default shell to zsh
-  become: true
-  shell: chsh -s "$(which zsh)" kamba
-  tags: 
-    - zsh
+
 
 - name: Cloning zap - zsh plugin manager
   ansible.builtin.git:

@@ -16,13 +16,16 @@
       - git-delta
       - tealdeer
       - matugen
-      - zen-browser-bin
       - fastfetch
-      - urbanlifestyle-sddm-theme
-
   tags:
     - install
     - extra
+
+
+- name: Install AUR packages
+  shell: |
+    yay -S --noconfirm --needed {{ aur_packages | join(' ') }}
+
 
 - name: Set SDDM theme to urbanlifestyle
   ansible.builtin.ini_file:

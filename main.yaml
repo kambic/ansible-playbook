@@ -12,7 +12,7 @@
     dotfiles_dest: "{{ ansible_facts['env']['HOME'] }}/dotfiles"
     # Default configuration
     github_username: kambic
-    dotfiles_repo: "{{ ansible_env.HOME }}/dotfiles"
+    # dotfiles_repo: "{{ ansible_env.HOME }}/dotfiles"
 
     # Hardware detection results (populated during runtime)
     gpu_type: unknown
@@ -20,6 +20,13 @@
 
     # User choices
     selected_package_profile: ""
+    aur_packages:
+      - google-chrome
+      # - visual-studio-code-bin
+      # - spotify
+      - urbanlifestyle-sddm-theme
+      - zen-browser-bin
+
 
   pre_tasks:
       # Hardware detection determines which packages to install and system optimizations to apply
@@ -124,4 +131,3 @@
     # - include_tasks: tasks/node.yaml
     - include_tasks: tasks/fonts.yaml
     # - include_tasks: tasks/desktop.yaml
-    - include_tasks: tasks/services.yaml

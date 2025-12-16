@@ -32,6 +32,8 @@
       - wireplumber
       - zathura
       - zathura-pdf-mupdf
+      - linux-zen-headers
+      - linux-zen
       - zip
   tags: 
     - install

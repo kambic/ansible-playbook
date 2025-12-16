@@ -6,6 +6,7 @@
     - install
     - extra
 
+
 - name: Installing extra packages
   become: true
   pacman:
@@ -15,12 +16,26 @@
       - git-delta
       - tealdeer
       - matugen
+      - zen-browser-bin
+      - fastfetch
+      - urbanlifestyle-sddm-theme 
   
 
   tags:
     - install
     - extra
 
+- name: Set SDDM theme to urbanlifestyle
+  ansible.builtin.ini_file:
+    path: /etc/sddm.conf.d/theme.conf
+    section: Theme
+    option: Current
+    value: urbanlifestyle
+    create: yes
+  become: true
+  tags:
+    - extra
+  
 - name: Tldr
   shell: tldr --update
   tags: 

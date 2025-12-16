@@ -9,10 +9,6 @@
     dotbot_bin: "{{ dotfiles_dest }}/dotbot/bin/dotbot"  # Adjust if submodule path differs
     dotfiles_dest: "{{ ansible_facts['env']['HOME'] }}/dotfiles"
 
-    source_key: "./.ssh/id_rsa"
-    dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_rsa"
-    personal: "{{ lookup('env', 'HOME') }}/Personal"
-
   pre_tasks: 
     - name: Update pacman
       become: true
@@ -22,8 +18,6 @@
   tasks:
     - include_tasks: tasks/core.yaml
     # - include_tasks: tasks/zsh.yaml
-    # - include: tasks/ssh.yaml
-    - include_tasks: tasks/nvim.yaml
     - include_tasks: tasks/aur.yaml
     # - include_tasks: tasks/dotfiles.yaml
     # - include_tasks: tasks/node.yaml

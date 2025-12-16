@@ -1,11 +1,11 @@
+---
 - name: Update pacman cache
   become: true
   pacman:
-    update_cache: yes
+    update_cache: true
   tags:
     - install
     - extra
-
 
 - name: Installing extra packages
   become: true
@@ -18,8 +18,7 @@
       - matugen
       - zen-browser-bin
       - fastfetch
-      - urbanlifestyle-sddm-theme 
-  
+      - urbanlifestyle-sddm-theme
 
   tags:
     - install
@@ -31,12 +30,12 @@
     section: Theme
     option: Current
     value: urbanlifestyle
-    create: yes
+    create: true
   become: true
   tags:
     - extra
-  
+
 - name: Tldr
-  shell: tldr --update
-  tags: 
+  ansible.builtin.command: tldr --update
+  tags:
     - extra

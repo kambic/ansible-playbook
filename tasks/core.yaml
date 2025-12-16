@@ -1,6 +1,7 @@
+---
 - name: Install core programs.
   become: true
-  pacman: 
+  pacman:
     name:
       - alsa-utils
       - base-devel
@@ -35,6 +36,6 @@
       - linux-zen-headers
       - linux-zen
       - zip
-  tags: 
+  tags:
     - install
     - core

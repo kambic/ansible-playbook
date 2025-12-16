@@ -1,0 +1,54 @@
+---
+profile: production
+strict: true
+offline: false
+parseable: true
+quiet: false
+verbosity: 1
+
+kinds:
+  - playbook: '*.yml'
+  - playbook: '*.yaml'
+  - playbook: 'playbooks/*.yml'
+  - playbook: 'playbooks/*.yaml'
+  - tasks: 'tasks/*.yml'
+  - tasks: 'tasks/*.yaml'
+  - handlers: 'handlers/*.yml'
+  - handlers: 'handlers/*.yaml'
+  - vars: 'vars/*.yml'
+  - vars: 'vars/*.yaml'
+  - defaults: 'defaults/*.yml'
+  - defaults: 'defaults/*.yaml'
+  - meta: 'meta/*.yml'
+  - meta: 'meta/*.yaml'
+
+exclude_paths:
+  - .cache/
+  - .github/
+  - tests/
+  - molecule/
+  - .ansible-lint
+  - requirements.yml
+
+warn_list:
+  - experimental
+  - role-name[path]
+  - schema[meta]
+
+skip_list:
+  - yaml[line-length]
+  - name[template]
+  - fqcn[action-core]
+
+enable_list:
+  - args
+  - empty-string-compare
+  - no-log-password
+  - no-same-owner
+
+mock_modules:
+  - community.general.ufw
+  - community.general.timezone
+  - community.general.locale_gen
+
+mock_roles: []

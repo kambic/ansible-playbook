@@ -1,17 +1,13 @@
 ---
-- name: Install and manage dotfiles with Dotbot
+- name: Dotfiles Restoration System
   hosts: localhost
   connection: local
   gather_facts: true
-
+  become: false
 
   vars:
-    dotfiles_repo: "git@github.com:kambic/hyprdots.git"
-    dotbot_config: "install.conf.yaml" # Your config file name
-    dotbot_bin: "{{ dotfiles_dest }}/dotbot/bin/dotbot" # Adjust if submodule path differs
-    dotfiles_dest: "{{ ansible_facts['env']['HOME'] }}/dotfiles"
     # Default configuration
-    github_username: kambic
+    github_username: coffebar
     dotfiles_repo: "{{ ansible_env.HOME }}/dotfiles"
 
     # Hardware detection results (populated during runtime)
@@ -22,7 +18,7 @@
     selected_package_profile: ""
 
   pre_tasks:
-      # Hardware detection determines which packages to install and system optimizations to apply
+    # Hardware detection determines which packages to install and system optimizations to apply
     # This is critical for proper driver installation and performance tuning
     - name: Hardware Detection
       block:
@@ -111,17 +107,97 @@
             selected_package_profile: "{{ 'intel' if package_profile_choice.user_input == '1' else 'nvidia' if package_profile_choice.user_input == '2' else 'nvidia-xorg'
               if package_profile_choice.user_input == '3' else 'skip' if package_profile_choice.user_input == '4' else 'skip' }}"
 
-    - name: Update pacman
-      become: true
-      pacman:
-        update_cache: true
-      tags: install
   tasks:
-    - include_tasks: tasks/core.yaml
-    # - include_tasks: tasks/zsh.yaml
-    - include_tasks: tasks/aur.yaml
-    # - include_tasks: tasks/dotfiles.yaml
-    # - include_tasks: tasks/node.yaml
-    - include_tasks: tasks/fonts.yaml
-    # - include_tasks: tasks/desktop.yaml
-    - include_tasks: tasks/services.yaml
+    # Basic system setup (from original script)
+    - name: System Setup
+      import_tasks: tasks/system-setup.yml
+      tags: [system, always]
+
+    # Dotfiles repository (from original script)
+    - name: Dotfiles Repository Setup
+      import_tasks: tasks/dotfiles-repo.yml
+      tags: [dotfiles, repo]
+
+    # Package installation (from original script)
+    - name: Package Installation
+      import_tasks: tasks/packages.yml
+      tags: [packages]
+
+    # System configuration (from original script)
+    - name: System Configuration
+      import_tasks: tasks/system-config.yml
+      tags: [config, system]
+
+    # Services (from original script)
+    - name: Services Management
+      import_tasks: tasks/services.yml
+      tags: [services]
+
+    # Development environment (from original script)
+    - name: Development Environment
+      import_tasks: tasks/development.yml
+      tags: [development, dev]
+
+    # Security and credentials (from original script)
+    - name: Security Setup
+      import_tasks: tasks/security.yml
+      tags: [security, credentials]
+
+    # Hardware-specific (battery management from original script)
+    - name: Hardware Configuration
+      import_tasks: tasks/hardware-config.yml
+      tags: [hardware, battery]
+
+  post_tasks:
+    - name: Post-Installation Validation
+      block:
+        - name: Verify dotfiles repository is functional
+          stat:
+            path: "{{ dotfiles_repo }}/HEAD"
+          register: dotfiles_head_check
+          failed_when: not dotfiles_head_check.stat.exists
+
+        - name: Check essential packages are installed
+          shell: |
+            missing_critical=""
+            for pkg in git neovim tmux; do
+              if ! pacman -Q "$pkg" >/dev/null 2>&1; then
+                missing_critical="$missing_critical $pkg"
+              fi
+            done
+            if [ -n "$missing_critical" ]; then
+              echo "Missing critical packages:$missing_critical"
+              exit 1
+            fi
+            echo "All essential packages verified"
+          register: essential_packages_check
+          changed_when: false
+
+        - name: Verify service states for enabled services
+          systemd:
+            name: "{{ item }}"
+            state: started
+          loop:
+            - NetworkManager
+            - bluetooth
+          register: service_check
+          failed_when: false
+          changed_when: false
+          when: ansible_system == "Linux"
+
+        - name: Display validation results
+          debug:
+            msg:
+              - "✅ Dotfiles repository: {{ 'Functional' if dotfiles_head_check.stat.exists else 'Missing' }}"
+              - "✅ Essential packages: {{ essential_packages_check.stdout }}"
+              - "✅ Services: {{ service_check.results | selectattr('failed', 'equalto', false) | list | length }}/{{ service_check.results | length }} running"
+
+    - name: Completion message
+      debug:
+        msg:
+          - "Done. Consider re-login or reboot to apply all changes."
+          - "{{ 'Battery charge thresholds have been set to 60-80%' if has_battery else '' }}"
+
+  handlers:
+    - name: Import handlers
+      import_tasks: handlers/main.yml

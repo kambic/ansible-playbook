@@ -1,13 +1,14 @@
+---
 - name: Install fonts.
   become: true
-  pacman: 
+  pacman:
     name:
       - noto-fonts
       - noto-fonts-emoji
       - ttf-font-awesome
       - ttf-jetbrains-mono-nerd
       - ttf-roboto
-      - ttf-ms-fonts 
-  tags: 
+      - ttf-ms-fonts
+  tags:
     - install
     - fonts

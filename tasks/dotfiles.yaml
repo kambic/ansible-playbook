@@ -1,11 +1,11 @@
-
+---
 - name: Clone dotfiles repo (with submodules)
   ansible.builtin.git:
     repo: "{{ dotfiles_repo }}"
     dest: "{{ dotfiles_dest }}"
-    recursive: yes
-    update: yes
-    version: cleanup  # Or your branch
+    recursive: true
+    update: true
+    version: cleanup # Or your branch
   register: dotfiles_clone
 
 - name: Update Dotbot and other submodules
@@ -16,7 +16,7 @@
 
 - name: Run Dotbot to install/symlink dotfiles
   ansible.builtin.command:
-    cmd: "{{ dotfiles_dest }}/install -c {{ dotbot_config }}"  
+    cmd: "{{ dotfiles_dest }}/install -c {{ dotbot_config }}"
     chdir: "{{ dotfiles_dest }}"
   # cmd: "{{ dotbot_bin }} -d {{ dotfiles_dest }} -c {{ dotbot_config }}"
 

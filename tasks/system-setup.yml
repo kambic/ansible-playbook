@@ -5,7 +5,7 @@
     - name: Verify we're not running as root
       fail:
         msg: "This playbook must NOT be run as root! Please run as regular user."
-      when: ansible_user_id == "root"
+      when:  ansible_facts['user_id'] == "root"
 
     - name: Enable color output in pacman
       become: true

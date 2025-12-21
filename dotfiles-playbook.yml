@@ -7,7 +7,7 @@
 
   vars:
     # Default configuration
-    github_username: coffebar
+    github_username: kambic
     dotfiles_repo: "{{ ansible_env.HOME }}/dotfiles"
 
     # Hardware detection results (populated during runtime)
@@ -75,6 +75,15 @@
               - "Detected GPU: {{ gpu_type | upper }}"
               - "Battery present: {{ 'YES' if has_battery else 'NO' }}"
               - "Session type: {{ session_type_check.stdout | default('unknown') }}"
+        
+        - name: Dump vars
+          debug:
+            var: ansible_facts
+        
+        - name: Dump vars
+          debug:
+            var: ansible_facts['env']
+
 
         # Interactive package profile selection based on detected hardware
         # Different GPU types require different driver packages:
@@ -86,15 +95,14 @@
             prompt: |2
 
               Select package installation profile:
-              1) Intel GPU packages (pkglist-intel.txt)
-              2) NVIDIA GPU packages (pkglist-nvidia.txt)
-              3) NVIDIA Xorg packages (pkglist-nvidia-xorg.txt)
+              1) Hyprland packages (pkglist-hypr.txt)
+              2) KDE packages (pkglist-kde.txt)
+              3) Server packages (pkglist-server.txt)
               4) Skip package installation
 
               Recommended based on detected {{ gpu_type | upper }} GPU: {{
-                '2' if gpu_type == 'nvidia' and session_type_check.stdout != 'x11' else
-                '3' if gpu_type == 'nvidia' and session_type_check.stdout == 'x11' else
-                '1'
+                '1' if gpu_type == 'amd' and session_type_check.stdout != 'x11' else
+                '4'
               }}
 
               Enter choice (1-4, invalid input defaults to Skip)
@@ -104,7 +112,7 @@
         # Defaults to skip for invalid input to avoid installing wrong packages
         - name: Set selected package profile
           set_fact:
-            selected_package_profile: "{{ 'intel' if package_profile_choice.user_input == '1' else 'nvidia' if package_profile_choice.user_input == '2' else 'nvidia-xorg'
+            selected_package_profile: "{{ 'hypr' if package_profile_choice.user_input == '1' else 'nvidia' if package_profile_choice.user_input == '2' else 'nvidia-xorg'
               if package_profile_choice.user_input == '3' else 'skip' if package_profile_choice.user_input == '4' else 'skip' }}"
 
   tasks:
@@ -115,7 +123,7 @@
 
     # Dotfiles repository (from original script)
     - name: Dotfiles Repository Setup
-      import_tasks: tasks/dotfiles-repo.yml
+      import_tasks: tasks/dotfiles.yml
       tags: [dotfiles, repo]
 
     # Package installation (from original script)
@@ -124,79 +132,79 @@
       tags: [packages]
 
     # System configuration (from original script)
-    - name: System Configuration
-      import_tasks: tasks/system-config.yml
-      tags: [config, system]
+    # - name: System Configuration
+    #   import_tasks: tasks/system-config.yml
+    #   tags: [config, system]
 
-    # Services (from original script)
+    # # Services (from original script)
     - name: Services Management
       import_tasks: tasks/services.yml
       tags: [services]
 
-    # Development environment (from original script)
+    # # Development environment (from original script)
     - name: Development Environment
       import_tasks: tasks/development.yml
       tags: [development, dev]
 
-    # Security and credentials (from original script)
+    # # Security and credentials (from original script)
     - name: Security Setup
       import_tasks: tasks/security.yml
       tags: [security, credentials]
 
-    # Hardware-specific (battery management from original script)
+    # # Hardware-specific (battery management from original script)
     - name: Hardware Configuration
       import_tasks: tasks/hardware-config.yml
       tags: [hardware, battery]
 
-  post_tasks:
-    - name: Post-Installation Validation
-      block:
-        - name: Verify dotfiles repository is functional
-          stat:
-            path: "{{ dotfiles_repo }}/HEAD"
-          register: dotfiles_head_check
-          failed_when: not dotfiles_head_check.stat.exists
+  # post_tasks:
+  #   - name: Post-Installation Validation
+  #     block:
+  #       - name: Verify dotfiles repository is functional
+  #         stat:
+  #           path: "{{ dotfiles_repo }}/HEAD"
+  #         register: dotfiles_head_check
+  #         failed_when: not dotfiles_head_check.stat.exists
 
-        - name: Check essential packages are installed
-          shell: |
-            missing_critical=""
-            for pkg in git neovim tmux; do
-              if ! pacman -Q "$pkg" >/dev/null 2>&1; then
-                missing_critical="$missing_critical $pkg"
-              fi
-            done
-            if [ -n "$missing_critical" ]; then
-              echo "Missing critical packages:$missing_critical"
-              exit 1
-            fi
-            echo "All essential packages verified"
-          register: essential_packages_check
-          changed_when: false
+  #       - name: Check essential packages are installed
+  #         shell: |
+  #           missing_critical=""
+  #           for pkg in git neovim tmux; do
+  #             if ! pacman -Q "$pkg" >/dev/null 2>&1; then
+  #               missing_critical="$missing_critical $pkg"
+  #             fi
+  #           done
+  #           if [ -n "$missing_critical" ]; then
+  #             echo "Missing critical packages:$missing_critical"
+  #             exit 1
+  #           fi
+  #           echo "All essential packages verified"
+  #         register: essential_packages_check
+  #         changed_when: false
 
-        - name: Verify service states for enabled services
-          systemd:
-            name: "{{ item }}"
-            state: started
-          loop:
-            - NetworkManager
-            - bluetooth
-          register: service_check
-          failed_when: false
-          changed_when: false
-          when: ansible_system == "Linux"
+  #       - name: Verify service states for enabled services
+  #         systemd:
+  #           name: "{{ item }}"
+  #           state: started
+  #         loop:
+  #           - NetworkManager
+  #           - bluetooth
+  #         register: service_check
+  #         failed_when: false
+  #         changed_when: false
+  #         when: ansible_system == "Linux"
 
-        - name: Display validation results
-          debug:
-            msg:
-              - "✅ Dotfiles repository: {{ 'Functional' if dotfiles_head_check.stat.exists else 'Missing' }}"
-              - "✅ Essential packages: {{ essential_packages_check.stdout }}"
-              - "✅ Services: {{ service_check.results | selectattr('failed', 'equalto', false) | list | length }}/{{ service_check.results | length }} running"
+  #       - name: Display validation results
+  #         debug:
+  #           msg:
+  #             - "✅ Dotfiles repository: {{ 'Functional' if dotfiles_head_check.stat.exists else 'Missing' }}"
+  #             - "✅ Essential packages: {{ essential_packages_check.stdout }}"
+  #             - "✅ Services: {{ service_check.results | selectattr('failed', 'equalto', false) | list | length }}/{{ service_check.results | length }} running"
 
-    - name: Completion message
-      debug:
-        msg:
-          - "Done. Consider re-login or reboot to apply all changes."
-          - "{{ 'Battery charge thresholds have been set to 60-80%' if has_battery else '' }}"
+  #   - name: Completion message
+  #     debug:
+  #       msg:
+  #         - "Done. Consider re-login or reboot to apply all changes."
+  #         - "{{ 'Battery charge thresholds have been set to 60-80%' if has_battery else '' }}"
 
   handlers:
     - name: Import handlers

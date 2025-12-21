@@ -9,7 +9,8 @@
   block:
     - name: Set package list file based on profile
       set_fact:
-        package_list_file: "{{ ansible_env.HOME }}/pkglist-{{ selected_package_profile }}.txt"
+        package_list_file: "pkglist-{{ selected_package_profile }}.txt"
+        # package_list_file: "{{ ansible_env.HOME }}/pkglist-{{ selected_package_profile }}.txt"
 
     - name: Check if package list file exists
       stat:

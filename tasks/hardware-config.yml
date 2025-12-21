@@ -6,13 +6,7 @@
     - name: Set battery charge thresholds using TLP
       become: true
       shell: |
-        tlp setcharge 60 80 BAT0
+        tlp setcharge 50 60 BAT0
       changed_when: true
       failed_when: false
 
-    - name: Setup battery notification cron job
-      cron:
-        name: "Battery notification"
-        minute: "*/5"
-        job: "{{ ansible_env.HOME }}/.local/bin/batterynotify"
-        user: "{{ ansible_user_id }}"

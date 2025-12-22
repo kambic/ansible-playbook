@@ -1,0 +1,6 @@
+- name: Simple play
+  hosts: localhost
+  tasks:
+    - name: Hello
+      ansible.builtin.debug:
+        msg: "Hello {{ ansible_user }} {{ ansible_os_family }} {{ ansible_facts }}"

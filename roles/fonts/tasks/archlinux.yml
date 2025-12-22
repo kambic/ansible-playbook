@@ -1,7 +1,0 @@
----
-- name: Install fonts
-  become: true
-  community.general.pacman:
-    name: "{{ font_packages }}"
-    state: present
-  when: font_packages is defined

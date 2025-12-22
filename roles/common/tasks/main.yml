@@ -1,9 +1,15 @@
----
 - name: Include distro specific variables
   ansible.builtin.include_vars: "{{ distro_name }}.yml"
-
 - name: Install common packages
   become: true
   ansible.builtin.package:
     name: "{{ common_packages }}"
+    state: present
+- name: Install pacman packages
+  community.general.pacman:
+    name: "{{ pacman_packages }}"
+    state: present
+- name: Install AUR packages
+  kewlfft.aur.aur:
+    name: "{{ aur_packages }}"
     state: present

@@ -121,11 +121,6 @@
       import_tasks: tasks/system-setup.yml
       tags: [system, always]
 
-    # Dotfiles repository (from original script)
-    - name: Dotfiles Repository Setup
-      import_tasks: tasks/dotfiles.yml
-      tags: [dotfiles, repo]
-
     # Package installation (from original script)
     - name: Package Installation
       import_tasks: tasks/packages.yml
@@ -156,6 +151,10 @@
       import_tasks: tasks/hardware-config.yml
       tags: [hardware, battery]
 
+    # Dotfiles repository (from original script)
+    - name: Dotfiles Repository Setup
+      import_tasks: tasks/dotfiles.yml
+      tags: [dotfiles, repo]
   # post_tasks:
   #   - name: Post-Installation Validation
   #     block:

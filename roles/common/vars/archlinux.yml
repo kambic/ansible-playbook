@@ -1,0 +1,22 @@
+---
+common_packages:
+  - git
+  - eza
+  - jq
+  - nodejs
+  - npm
+  - xsel
+  - curl
+  - unzip
+  - neovim
+  - python
+  - python-pip
+  - fish
+  - htop
+  - starship
+  - zoxide
+  - sshfs
+  - grex
+  - asciinema
+  - trash-cli
+  - aria2

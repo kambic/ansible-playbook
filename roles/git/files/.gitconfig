@@ -1,0 +1,58 @@
+[user]
+	email = shrijal.acharya@gmail.com
+	name = Shrijal Acharya
+
+; Enforce SSH
+[url "ssh://git@github.com/"]
+  insteadOf = https://github.com/
+
+; This makes sure that when cloning 'my' repositories from github I don't have
+; to type the whole url. just do: git clone shricodev:<repo_name>
+[url "git@github.com:shricodev/"]
+  insteadOf = "sh:"
+
+; similar here, instead of typing git@github.com:shricodev/<repo_name>
+; just do: git clone gh:<username>/<repo_name>
+[url "git@github.com:"]
+  insteadOf = "gh:"
+
+[core]
+	editor = nvim
+  whitespace = error
+  excludesFile = ~/.gitignore_global
+
+[status]
+  branch = true
+  showStash = true
+
+[column]
+	ui = auto
+
+[branch]
+	sort = -committerdate
+
+[tag]
+  sort = -taggerdate
+
+[init]
+	defaultBranch = main
+
+[help]
+	autoCorrect = prompt
+
+[fetch]
+	prune = true
+
+[log]
+  date = iso
+
+[push]
+	autoSetupRemote = true
+
+[pull]
+	rebase = true
+
+; This basically remembers conflict resolution and if that occurs again in
+; future then it will automatically resolve the conflict.
+[rerere]
+	enabled = true

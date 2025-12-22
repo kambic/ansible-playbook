@@ -1,0 +1,15 @@
+---
+- name: Update package cache
+  become: true
+  block:
+    - name: Update 'apt' cache
+      ansible.builtin.apt:
+        update_cache: true
+      when: ansible_distribution == "Ubuntu"
+      changed_when: false
+
+    - name: Update 'pacman' cache
+      community.general.pacman:
+        update_cache: true
+      when: ansible_distribution == "Archlinux"
+      changed_when: false

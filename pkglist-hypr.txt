@@ -80,7 +80,6 @@ lsof
 lzop
 m4
 make
-mako
 man-db
 mediainfo
 mpv

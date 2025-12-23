@@ -1,0 +1,24 @@
+---
+- name: Ensure config directories exist
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  become: false
+  loop:
+    - "{{ config_dir }}/hypr"
+    - "{{ config_dir }}/waybar"
+    - "{{ config_dir }}/kitty"
+    - "{{ config_dir }}/wofi"
+    - "{{ config_dir }}/mako"
+
+- name: Enable laptop services
+  systemd:
+    name: "{{ item }}"
+    enabled: yes
+    state: started
+  loop: "{{ laptop_services }}"
+  when: 
+    - laptop_services is defined
+    - inventory_hostname in groups['laptops']
+

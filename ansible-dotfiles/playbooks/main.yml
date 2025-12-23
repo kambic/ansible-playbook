@@ -1,0 +1,10 @@
+---
+- name: Configure Arch Linux with Hyprland
+  hosts: all
+  become: true
+  tasks:
+    - name: Include system configuration
+      import_playbook: system.yml
+
+    - name: Include dotfiles configuration
+      import_playbook: dotfiles.yml

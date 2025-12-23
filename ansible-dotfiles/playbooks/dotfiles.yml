@@ -1,0 +1,6 @@
+---
+- name: Deploy Dotfiles
+  hosts: all
+  become: false
+  roles:
+    - dotfiles

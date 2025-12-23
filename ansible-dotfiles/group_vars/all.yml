@@ -1,0 +1,26 @@
+---
+dotfiles_dir: "{{ ansible_env.HOME }}/.dotfiles"
+config_dir: "{{ ansible_env.HOME }}/.config"
+user_name: "{{ ansible_user_id }}"
+user_home: "{{ ansible_env.HOME }}"
+
+base_packages:
+  - base-devel
+  - git
+  - vim
+  - htop
+  - wget
+  - curl
+  - unzip
+
+hyprland_packages:
+  - hyprland
+  - waybar
+  - wofi
+  - kitty
+  - mako
+  - grim
+  - slurp
+  - wl-clipboard
+  - swaylock
+  - swayidle

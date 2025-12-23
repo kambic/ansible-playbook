@@ -1,0 +1,8 @@
+---
+- name: System Configuration
+  hosts: all
+  become: true
+  roles:
+    - base
+    - packages
+    - hyprland

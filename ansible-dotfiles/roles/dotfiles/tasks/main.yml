@@ -1,0 +1,41 @@
+
+---
+- name: Create dotfiles directory
+  file:
+    path: "{{ dotfiles_dir }}"
+    state: directory
+    mode: '0755'
+  become: false
+
+- name: Deploy Hyprland config
+  template:
+    src: hypr/hyprland.conf.j2
+    dest: "{{ config_dir }}/hypr/hyprland.conf"
+    mode: '0644'
+  become: false
+
+- name: Deploy Waybar config
+  copy:
+    src: "{{ item }}"
+    dest: "{{ config_dir }}/waybar/"
+    mode: '0644'
+  become: false
+  with_fileglob:
+    - "../files/dotfiles/waybar/*"
+
+- name: Deploy Kitty config
+  copy:
+    src: ../files/dotfiles/kitty/kitty.conf
+    dest: "{{ config_dir }}/kitty/kitty.conf"
+    mode: '0644'
+  become: false
+
+- name: Deploy shell configs
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ user_home }}/{{ item.dest }}"
+    mode: '0644'
+  become: false
+  loop:
+    - { src: '../files/dotfiles/.bashrc', dest: '.bashrc' }
+    - { src: '../files/dotfiles/.zshrc', dest: '.zshrc' }

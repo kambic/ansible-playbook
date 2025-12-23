@@ -1,3 +1,4 @@
+---
 - name: Include distro specific variables
   ansible.builtin.include_vars: "{{ distro_name }}.yml"
 - name: Install common packages
@@ -14,8 +15,8 @@
   kewlfft.aur.aur:
     name: "{{ aur_packages }}"
     state: present
-- name: 'Add EasyEffect profile'
+- name: "Add EasyEffect profile"
   ansible.builtin.copy:
     src: "{{ role_path }}/files/irs/"
     dest: "{{ ansible_facts['user_dir'] }}/.config/easyeffects/irs/"
-    mode: 'preserve'
+    mode: "preserve"

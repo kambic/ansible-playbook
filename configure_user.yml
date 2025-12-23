@@ -14,7 +14,7 @@
       tags: [dotfiles]
     - role: docker
       tags: [dotfiles]
-    - role: etc_files
+    - role: ssh
       tags: [dotfiles]
 
 # NOTE: Always put fish, git at the end here when configuring dotfiles

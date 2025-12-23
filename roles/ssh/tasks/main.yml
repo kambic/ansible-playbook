@@ -1,0 +1,19 @@
+#SPDX-License-Identifier: MIT-0
+# tasks file for ssh
+- name: Ensure that ssh directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.ssh"
+    state: directory
+    mode: '700'
+- name: Find SSH keys and config files
+  ansible.builtin.find:
+    paths: "{{ role_path }}/files"
+    file_type: file
+  register: found_files
+- name: SSH Config
+  ansible.builtin.copy:
+    src: "{{ item.path }}"
+    dest: "{{ ansible_env.HOME }}/.ssh/{{ item.path | basename }}"
+    decrypt: true
+    mode: '600'
+  loop: "{{ found_files.files }}"

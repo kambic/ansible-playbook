@@ -3,7 +3,7 @@
   tasks:
     - name: Hello
       ansible.builtin.debug:
-        msg: "Hello {{ ansible_facts['user_dir'] }} "
+        msg: "Hello {{ ansible_facts['distribution'] }} {{ ansible_facts }} "
     - name: Pavza
       pause:
         prompt: yes # not required. Optional text to use for the prompt message.

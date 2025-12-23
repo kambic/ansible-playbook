@@ -6,6 +6,7 @@
     name: "{{ common_packages }}"
     state: present
 - name: Install pacman packages
+  become: true
   community.general.pacman:
     name: "{{ pacman_packages }}"
     state: present
@@ -13,3 +14,8 @@
   kewlfft.aur.aur:
     name: "{{ aur_packages }}"
     state: present
+- name: 'Add EasyEffect profile'
+  ansible.builtin.copy:
+    src: "{{ role_path }}/files/irs/"
+    dest: "{{ ansible_user_dir }}/.config/easyeffects/irs/"
+    mode: '311'

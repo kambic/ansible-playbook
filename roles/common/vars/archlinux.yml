@@ -1,5 +1,5 @@
 ---
-common_packages:
+pacman_packages:
   - git
   - eza
   - jq
@@ -20,7 +20,6 @@ common_packages:
   - asciinema
   - trash-cli
   - aria2
-pacman_packages:
   - 7zip
   - accountsservice
   - alsa-plugins
@@ -144,7 +143,7 @@ pacman_packages:
   - thunar
   - thunar-archive-plugin
   - thunar-volman
-  - tlp
+  # - tlp
   - tmux
   - tomlplusplus
   - traceroute

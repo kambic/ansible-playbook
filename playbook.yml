@@ -1,8 +1,8 @@
 - name: Simple play
+  become: true
   hosts: localhost
   roles:
     - etc_files
-
 # tasks:
 #   - name: Hello
 #     ansible.builtin.debug:

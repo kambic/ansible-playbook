@@ -28,7 +28,6 @@ pacman_packages:
   - android-tools
   - ansible
   - ansible-lint
-  - arc-gtk-theme
   - autoconf
   - automake
   - autopep8
@@ -42,7 +41,7 @@ pacman_packages:
   - bluez-utils
   - brightnessctl
   - btrfs-progs
-  - clipman
+  # - clipman
   - copyq
   - deluge
   - deluge-gtk
@@ -51,7 +50,7 @@ pacman_packages:
   - docker
   - docker-buildx
   - dosfstools
-  - downgrade
+  # - downgrade
   - dunst
   - easyeffects
   - efibootmgr
@@ -91,7 +90,7 @@ pacman_packages:
   - keepassxc
   - kooha
   - lftp
-  - libinput-gestures
+  # - libinput-gestures
   - libpulse
   - libtool
   - linux-firmware
@@ -125,7 +124,7 @@ pacman_packages:
   - pipewire-alsa
   - pipewire-jack
   - pipewire-pulse
-  - pix
+  # - pix
   - pkgconf
   - playerctl
   - python-openai
@@ -135,13 +134,13 @@ pacman_packages:
   - python-virtualenv
   - remmina
   - ripgrep
-  - rsync
+  # - rsynci
   - smartmontools
   - sof-firmware
   - sshfs
   - sudo
   - syncthing
-  - systemd-resolvconf
+  # - systemd-resolvconf
   - thunar
   - thunar-archive-plugin
   - thunar-volman
@@ -162,7 +161,7 @@ pacman_packages:
   - wireplumber
   - wl-clipboard
   - wofi
-  - wrk
+  # - wrk
   - xdg-desktop-portal-hyprland
   - xdg-user-dirs
   - xdg-utils
@@ -176,6 +175,7 @@ pacman_packages:
   - fuzzel
   - cyme
 aur_packages:
+  - arc-gtk-theme
   - betterbird-bin
   - claude-desktop-native
   - chatbox-bin

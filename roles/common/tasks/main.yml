@@ -1,11 +1,11 @@
 ---
 - name: Include distro specific variables
-  ansible.builtin.include_vars: "{{ distro_name }}.yml"
-- name: Install common packages
-  become: true
-  ansible.builtin.package:
-    name: "{{ common_packages }}"
-    state: present
+  ansible.builtin.include_vars: "{{  ansible_facts['distribution'] | lower }}.yml"
+# - name: Install common packages
+#   become: true
+#   ansible.builtin.package:
+#     name: "{{ common_packages }}"
+#     state: present
 - name: Install pacman packages
   become: true
   community.general.pacman:

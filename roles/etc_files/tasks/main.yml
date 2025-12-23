@@ -9,6 +9,7 @@
     mode: "{{ etc_mode }}"
     backup: true
     validate: "/usr/sbin/sshd -t -f %s"
+  when: 0 > 1
   notify: Restart sshd
 - name: Deploy sysctl.conf
   ansible.builtin.template:
@@ -18,6 +19,7 @@
     group: "{{ etc_group }}"
     mode: "{{ etc_mode }}"
   notify: Reload sysctl
+  when: false
 - name: Deploy pacman.conf
   ansible.builtin.template:
     src: pacman.conf.j2
@@ -25,7 +27,7 @@
     owner: "{{ etc_owner }}"
     group: "{{ etc_group }}"
     mode: "{{ etc_mode }}"
-
+  when: false
 # - name: Deploy /etc templates
 #   ansible.builtin.template:
 #     src: "{{ item.src }}"
@@ -37,3 +39,19 @@
 #   loop:
 #     - { src: "sshd_config.j2", dest: "/etc/ssh/sshd_config" }
 #     - { src: "sysctl.conf.j2", dest: "/etc/sysctl.conf" }
+- name: Find all files in role files/
+  ansible.builtin.find:
+    paths: "{{ role_path }}/files"
+    file_type: file
+  register: etc_files
+- name: Create destination directories
+  ansible.builtin.file:
+    path: "/etc/{{ item.path | regex_replace('^' + role_path + '/files/', '') | dirname }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+    backup: true
+  loop: "{{ etc_files.files }}"
+  loop_control:
+    label: "{{ item.path }}"

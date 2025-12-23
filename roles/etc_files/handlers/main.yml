@@ -6,3 +6,15 @@
     state: restarted
 - name: Reload sysctl
   ansible.builtin.command: sysctl --system
+- name: reload systemd
+  ansible.builtin.command: systemctl daemon-reexec
+  become: true
+- name: reload sysctl
+  ansible.builtin.command: sysctl --system
+  become: true
+- name: reload udev
+  ansible.builtin.command: udevadm control --reload
+  become: true
+- name: reload tmpfiles
+  ansible.builtin.command: systemd-tmpfiles --create
+  become: true

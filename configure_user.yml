@@ -1,5 +1,5 @@
 - name: Configure dotfiles for individual tools
-  hosts: all
+  hosts: localhost
   roles:
     # Ditch alacritty for ghostty. It's been acting weird lately with completion
     # borders and all especially in (md) files.
@@ -8,14 +8,12 @@
       tags: [dotfiles]
     - role: lazygit
       tags: [dotfiles]
-    - role: yazi
-      tags: [dotfiles]
-    - role: zed
-      tags: [dotfiles]
-    - role: docker
-      tags: [dotfiles]
-    - role: ssh
-      tags: [dotfiles]
+    # - role: yazi
+      # tags: [dotfiles]
+    # - role: zed
+      # tags: [dotfiles]
+    # - role: ssh
+      # tags: [dotfiles]
 
 # NOTE: Always put fish, git at the end here when configuring dotfiles
 # because fish config sources different tools like starship, zoxide and all

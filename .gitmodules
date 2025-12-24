@@ -1,3 +1,6 @@
 [submodule "CachyOS-Settings"]
 	path = CachyOS-Settings
 	url = https://github.com/CachyOS/CachyOS-Settings.git
+[submodule "ansible-arch-linux"]
+	path = ansible-arch-linux
+	url = https://github.com/loganmarchione/ansible-arch-linux.git

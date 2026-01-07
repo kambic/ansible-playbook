@@ -1,26 +1,41 @@
-# Ansible Playbook for setting up My Arch Linux env.
+# ansible-arch-linux
 
-This repository contains an Ansible playbook to automate the setup of an Arch Linux system for a specific workflow. The playbook installs necessary software packages and performs system configurations.
+[![Lint](https://github.com/loganmarchione/ansible-arch-linux/actions/workflows/lint.yml/badge.svg)](https://github.com/loganmarchione/ansible-arch-linux/actions/workflows/lint.yml)
 
-## Prerequisites
-- Arch Linux: Ensure the system has a fresh Arch Linux installation.
-- Ansible: Install Ansible on your control machine using `sudo pacman -S ansible`.
+Ansible playbook to setup my Arch Linux machines (i.e., meant to be run against localhost)
 
-## Usage
-1. Clone the repository: Run 
-```sh
-ansible-pull -U https://github.com/kambic/ansible-playbook.git
-```
+## Explanation
 
-2. Run the Playbook: Execute
-```sh
-ansible-playbook --ask-become-pass --ask-vault-password main.yaml
-```
+* This is meant for _my machine_. You can use it as a guide, but please don't blindly run it on your machine (it will break things).
+* This is meant to be run in the [Post-installation](https://wiki.archlinux.org/title/installation_guide#Post-installation) section of the [Installation guide](https://wiki.archlinux.org/title/installation_guide) (i.e., after your partitions are setup, user account is created, fstab is setup, chroot, etc...)
 
-3. Verification: Check that the Arch Linux system is set up according to your workflow requirements.
+## Requirements
 
-## Components Installed
-The playbook sets up the following components for my workflow:
-- Hyprland (Wayland Compositor)
-- Waybar
-- Zsh
+1. Install the necessary packages
+   ```
+   sudo pacman -S git python
+   ```
+1. Clone this repo
+   ```
+   git clone https://github.com/loganmarchione/ansible-arch-linux.git
+   cd ansible-arch-linux
+   ```
+1. Install Ansible
+   ```
+   python3 -m venv venv
+   source venv/bin/activate
+   pip3 install -r requirements.txt
+   ```
+1. Install the Ansible requirements
+   ```
+   ansible-galaxy install -r requirements.yml
+   ```
+1. (Optional) Edit the variables in `group_vars`
+1. (Optional) Run the playbook in check mode to view potential changes
+   ```
+   ansible-playbook main.yml --ask-become-pass --check
+   ````
+1. Run the playbook (enter your user's password when prompted)
+   ```
+   ansible-playbook main.yml --ask-become-pass
+   ```
